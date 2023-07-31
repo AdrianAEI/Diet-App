@@ -1,10 +1,11 @@
-package polsl.dietapp.repository;
+package polsl.dietapp.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import polsl.dietapp.entities.User;
+import org.springframework.stereotype.Repository;
+import polsl.dietapp.entities.security.User;
 
 import java.util.Optional;
-
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 

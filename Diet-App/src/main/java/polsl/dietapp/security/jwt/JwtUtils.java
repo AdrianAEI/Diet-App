@@ -1,22 +1,22 @@
 package polsl.dietapp.security.jwt;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+
+import polsl.dietapp.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.Value;
-import org.springframework.security.core.Authentication;
-
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import polsl.dietapp.services.UserDetailsImpl;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.logging.Logger;
 
 @Component
 public class JwtUtils {
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(JwtUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${polsl.dietapp.jwtSecret}")
     private String jwtSecret;

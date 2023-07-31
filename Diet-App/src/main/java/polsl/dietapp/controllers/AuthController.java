@@ -6,21 +6,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import polsl.dietapp.entities.ERole;
-import polsl.dietapp.entities.Role;
-import polsl.dietapp.entities.User;
+import org.springframework.web.bind.annotation.*;
+import polsl.dietapp.entities.security.ERole;
+import polsl.dietapp.entities.security.Role;
+import polsl.dietapp.entities.security.User;
 import polsl.dietapp.entities.request.LoginRequest;
 import polsl.dietapp.entities.request.SignupRequest;
 import polsl.dietapp.entities.response.JwtResponse;
 import polsl.dietapp.entities.response.MessageResponse;
-import polsl.dietapp.repository.RoleRepository;
-import polsl.dietapp.repository.UserRepository;
+import polsl.dietapp.repositories.RoleRepository;
+import polsl.dietapp.repositories.UserRepository;
 import polsl.dietapp.security.jwt.JwtUtils;
 import polsl.dietapp.services.UserDetailsImpl;
 
@@ -44,6 +42,12 @@ public class AuthController {
 
     private final JwtUtils jwtUtils;
 
+    @GetMapping("/hello")
+    //test endpoint
+    public String Hello(){
+        return "Hello Adrian";
+    }
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -56,7 +60,7 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new JwtResponse(jwt,
@@ -85,8 +89,7 @@ public class AuthController {
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        //danger
-        Set<String> strRoles = (Set<String>) signUpRequest.getRole();
+        Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
@@ -96,22 +99,26 @@ public class AuthController {
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case "admin":
+                    case "admin" -> {
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
-
-                        break;
-                    case "mod":
+                    }
+                    case "mod" -> {
                         Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
-
-                        break;
-                    default:
+                    }
+                    case "premium" -> {
+                        Role premiumRole = roleRepository.findByName(ERole.ROLE_PREMIUM_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(premiumRole);
+                    }
+                    default -> {
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
+                    }
                 }
             });
         }

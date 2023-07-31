@@ -1,8 +1,22 @@
 package polsl.dietapp.entities.response;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+@Getter
+@Setter
+@AllArgsConstructor
 public class JwtResponse {
-    public JwtResponse(String jwt, Object id, String username, Object email, List<String> roles) {
-    }
+
+    private String jwt;
+
+    private Long id;
+
+    private String username;
+
+    private String email;
+
+    private List<String> roles;
 }

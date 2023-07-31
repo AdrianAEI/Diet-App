@@ -1,11 +1,12 @@
-package polsl.dietapp.repository;
+package polsl.dietapp.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import polsl.dietapp.entities.ERole;
-import polsl.dietapp.entities.Role;
+import org.springframework.stereotype.Repository;
+import polsl.dietapp.entities.security.ERole;
+import polsl.dietapp.entities.security.Role;
 
 import java.util.Optional;
-
+@Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Optional<Role> findByName(ERole name);
 }
