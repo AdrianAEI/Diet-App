@@ -24,10 +24,12 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @NotBlank
     @Size(max = 20)
+    @Column(name = "username")
     private String username;
 
     @NotBlank

@@ -8,16 +8,11 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@Table(name = "menu")
+@Table(name = "ingredient")
 @Entity
-public class Menu {
+public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-    //todo add relationships
-
-    @Column(name="kcal")
-    private Integer kcal;
 }
