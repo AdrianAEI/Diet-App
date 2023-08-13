@@ -3,6 +3,8 @@ package polsl.dietapp.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -11,13 +13,16 @@ import lombok.*;
 @Table(name = "menu")
 @Entity
 public class Menu {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    //todo add relationships
-
     @Column(name="kcal")
     private Integer kcal;
+
+    @OneToMany
+    @JoinColumn(name = "menu_id")
+    private List<Meal> meals;
 }

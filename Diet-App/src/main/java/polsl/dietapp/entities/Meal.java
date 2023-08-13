@@ -3,6 +3,8 @@ package polsl.dietapp.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,5 +20,16 @@ public class Meal {
 
     @Column(name="kcal")
     private Integer kcal;
-    //todo add macro struct
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Menu menu;
+
+    @ManyToMany
+    @JoinTable(
+            name = "meals_ingredients",
+            joinColumns = @JoinColumn(name = "meal_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+    private List<Ingredient> ingredients;
+
+
 }
